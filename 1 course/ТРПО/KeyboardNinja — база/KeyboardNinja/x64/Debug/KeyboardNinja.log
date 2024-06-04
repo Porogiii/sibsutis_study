@@ -1,0 +1,4 @@
+﻿  main.cpp
+C:\KeyboardNinja — база\KeyboardNinja\main.cpp(144,5): error C2065: herosprite: необъявленный идентификатор
+C:\KeyboardNinja — база\KeyboardNinja\main.cpp(144,27): error C2065: herotexture: необъявленный идентификатор
+C:\KeyboardNinja — база\KeyboardNinja\main.cpp(145,5): error C2065: herosprite: необъявленный идентификатор
