@@ -1,0 +1,56 @@
+import numpy as np
+import sympy as sym
+from sympy.utilities.lambdify import lambdify
+import matplotlib.pyplot as plt
+
+# Функция для вычисления суммы элементов
+def CountSum(x, g, X, Y):
+    n = len(g)
+    SLAU = []
+    for i in range(n):
+        SLAU.append([])
+        for j in range(n):
+            sum = 0
+            element1 = lambdify(x, sym.S(g[i]))
+            element2 = lambdify(x, sym.S(g[j]))
+            for v in range(len(X)):
+                sum = sum + (element1(X[v]) * element2(X[v]))
+            SLAU[i].append(sum)
+    b = []
+    for i in range(n):
+        sum = 0
+        element = lambdify(x, sym.S(g[i]))
+        for v in range(len(X)):
+            sum = sum + element(X[v]) * Y[v]
+        b.append(sum)
+    koefs = np.linalg.solve(SLAU, b)
+    return koefs
+
+# Пример набора данных
+X = np.array([0, 1, 2, 3, 4, 6])
+Y = np.array([0, 1, 4.3, 8, 17, 35])
+
+# Создание символьных переменных для построения полинома
+x = sym.symbols('x')
+g = [x**i for i in range(3)]  # Полином степени 2
+
+# Поиск коэффициентов полинома
+coefficients = CountSum(x, g, X, Y)
+print("Коэффициенты полинома:", coefficients)
+
+# Функция полинома
+polynomial = sum(coefficients[i] * g[i] for i in range(len(g)))
+
+# Генерация значений для построения аппроксимации
+x_values = np.linspace(min(X), max(X), 100)
+y_values = [lambdify(x, polynomial)(x_value) for x_value in x_values]
+
+# Построение графика исходных данных и аппроксимации
+plt.scatter(X, Y, color='blue', label='Исходные данные')
+plt.plot(x_values, y_values, color='red', label='Аппроксимация (полином степени 2)')
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.title('Полиномиальная аппроксимация')
+plt.legend()
+plt.grid(True)
+plt.show()

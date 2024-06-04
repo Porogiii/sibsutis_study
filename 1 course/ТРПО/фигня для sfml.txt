@@ -1,0 +1,2 @@
+g++ -L"C:\SFML-2.5.1\lib" ./test.o -o app.exe -lmingw32 -lsfml-graphics -lsfml-window -lsfml-system -lsfml-system -lsfml-main -mwindows
+g++ -I"C:\SFML-2.5.1\include\" -c test.cpp -o test.o

@@ -1,0 +1,36 @@
+from fractions import Fraction
+
+def read_matrix(filename):
+    matrix = []
+    with open(filename, 'r') as file:
+        for line in file:
+            row = [Fraction(x) for x in line.split()]
+            matrix.append(row)
+    return matrix
+
+def print_solution(iteration, solution):
+    print(f"Iteration {iteration}:")
+    for i, x in enumerate(solution):
+        print(f"x_{i+1} = {x.numerator}/{x.denominator}")
+
+def seidel_iteration(matrix, iterations):
+    n = len(matrix)
+    x = [Fraction(0) for _ in range(n)]
+    for iteration in range(1, iterations + 1):
+        x_new = [0] * n
+        for i in range(n):
+            summation1 = sum(matrix[i][j] * x_new[j] for j in range(i))
+            summation2 = sum(matrix[i][j] * x[j] for j in range(i + 1, n))
+            x_new[i] = (matrix[i][n] - summation1 - summation2) / matrix[i][i]
+        x = x_new
+        print_solution(iteration, x)
+    return x
+
+def main():
+    filename = "matrix.txt"  # Имя файла
+    iterations = 3  # Шаги итераций
+    matrix = read_matrix(filename)
+    solution = seidel_iteration(matrix, iterations)
+
+if __name__ == "__main__":
+    main()

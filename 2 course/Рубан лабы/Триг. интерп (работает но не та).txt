@@ -1,0 +1,39 @@
+import math
+
+def trig_interpolation(x, points):
+    """
+    Функция для вычисления тригонометрической интерполяции.
+    
+    Параметры:
+    x: float - значение, для которого нужно вычислить интерполяцию.
+    points: list - список кортежей (x_i, y_i) - координаты точек, через которые проходит интерполяция.
+    
+    Возвращает:
+    float: значение интерполяции в точке x.
+    """
+    n = len(points)
+    result = 0.0
+    
+    for i in range(n):
+        xi, yi = points[i]
+        term = yi
+        for j in range(n):
+            if j != i:
+                xj, _ = points[j]
+                term *= (x - xj) / (xi - xj)
+        result += term
+    
+    return result
+
+# Пример использования
+if __name__ == "__main__":
+    # Задаем точки для интерполяции
+    points = [(-1 * math.pi / 2, -1), (0, 0), (math.pi / 4, 1), (math.pi / 2, 0), (3 * math.pi / 4, -1), (math.pi, 0)]
+    
+    # Выбираем точку для интерполяции
+    x = math.pi / 3
+    
+    # Вычисляем интерполяцию
+    interpolation = trig_interpolation(x, points)
+    
+    print(f"Значение интерполяции в точке x = {x} равно {interpolation}")

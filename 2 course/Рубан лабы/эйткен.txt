@@ -1,0 +1,68 @@
+import math
+
+def lagrange_interpolation(x_values, y_values, target_x):
+    """
+    Функция, реализующая интерполяционный многочлен Лагранжа.
+    
+    Параметры:
+        x_values: список значений x (узлы интерполяции)
+        y_values: список соответствующих значений y
+        target_x: значение x, для которого нужно вычислить значение интерполяции
+    """
+    n = len(x_values)
+    result = 0.0
+
+    for i in range(n):
+        term = y_values[i]
+        for j in range(n):
+            if j != i:
+                term *= (target_x - x_values[j]) / (x_values[i] - x_values[j])
+        result += term
+
+    return result
+
+def aitken_interpolation(x_values, y_values, target_x):
+    """
+    Функция, реализующая интерполяцию с помощью схемы Эйткена.
+    
+    Параметры:
+        x_values: список значений x (узлы интерполяции)
+        y_values: список соответствующих значений y
+        target_x: значение x, для которого нужно вычислить значение интерполяции
+    """
+    n = len(x_values)
+    matrix = [[0] * n for _ in range(n)]
+
+    # Заполнение первого столбца матрицы значением y_values
+    for i in range(n):
+        matrix[i][0] = y_values[i]
+
+    # Рекурсивное заполнение оставшихся ячеек матрицы
+    for j in range(1, n):
+        for i in range(n - j):
+            matrix[i][j] = ((target_x - x_values[i + j]) * matrix[i][j - 1] - 
+                            (target_x - x_values[i]) * matrix[i + 1][j - 1]) / (x_values[i] - x_values[i + j])
+
+    return matrix[0][n - 1]
+
+# Ввод пользователем количества узлов интерполяции
+n = int(input("Введите количество узлов интерполяции: "))
+
+# Ввод пользователем значений x для узлов интерполяции
+x_values = []
+y_values = []
+for i in range(n):
+    x = float(input(f"Введите значение x{i + 1}: "))
+    x_values.append(x)
+    y = float(eval(input("Введите значение функции для этого x: ")))
+    y_values.append(y)
+
+# Ввод значения x, для которого нужно вычислить интерполяцию
+target_x = float(input("Введите значение x, для которого нужно вычислить интерполяцию: "))
+
+# Вычисление интерполяции Лагранжа и схемы Эйткена
+lagrange_result = lagrange_interpolation(x_values, y_values, target_x)
+aitken_result = aitken_interpolation(x_values, y_values, target_x)
+
+print(f"Интерполяция Лагранжа для x={target_x}: {lagrange_result}")
+print(f"Интерполяция с помощью схемы Эйткена для x={target_x}: {aitken_result}")

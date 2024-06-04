@@ -1,0 +1,48 @@
+def divided_differences(x_values, y_values):
+    n = len(x_values)
+    F = [[None] * n for _ in range(n)]
+    for i in range(n):
+        F[i][0] = y_values[i]
+
+    for j in range(1, n):
+        for i in range(n - j):
+            F[i][j] = (F[i + 1][j - 1] - F[i][j - 1]) / (x_values[i + j] - x_values[i])
+
+    return F
+
+def newton_interpolation(x, x_values, F):
+    n = len(x_values)
+    interpolation = 0
+    for i in range(n):
+        term = F[0][i]
+        for j in range(i):
+            term *= (x - x_values[j])
+        interpolation += term
+    return interpolation
+
+def lagrange_interpolation(x, x_values, y_values):
+    n = len(x_values)
+    interpolation = 0
+    for i in range(n):
+        term = y_values[i]
+        for j in range(n):
+            if j != i:
+                term *= (x - x_values[j]) / (x_values[i] - x_values[j])
+        interpolation += term
+    return interpolation
+
+# Пример использования:
+x_values = [1, 2, 3, 4]
+y_values = [1, 1.4142, 1.7321, 2]
+
+# Рассчитываем таблицу разделённых разностей
+F = divided_differences(x_values, y_values)
+
+# Вычисляем значение интерполяционного многочлена Ньютона в точке x
+x = 2.56
+newton_result = newton_interpolation(x, x_values, F)
+print("Интерполяционный многочлен Ньютона в точке", x, ":", newton_result)
+
+# Вычисляем значение интерполяционного многочлена Лагранжа в точке x
+lagrange_result = lagrange_interpolation(x, x_values, y_values)
+print("Интерполяционный многочлен Лагранжа в точке", x, ":", lagrange_result)
